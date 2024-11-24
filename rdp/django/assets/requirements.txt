@@ -1,0 +1,40 @@
+##-----------------------------------------------------------------------
+## CORE
+# https://www.djangoproject.com/
+django
+
+# https://pypi.org/project/python-dotenv/
+python-dotenv
+
+##-----------------------------------------------------------------------
+## Tools
+# https://django-import-export.readthedocs.io/en/latest/installation.html
+django-import-export[all]
+
+# https://django-filter.readthedocs.io/en/stable/
+django-filter
+
+
+##-----------------------------------------------------------------------
+## VIEWS
+# https://pypi.org/project/django-htmx/
+django-htmx
+
+# https://django-cotton.com/docs/quickstart
+django-cotton
+
+
+
+##-----------------------------------------------------------------------
+## API
+# https://www.django-rest-framework.org/
+djangorestframework
+
+# https://django-rest-framework-simplejwt.readthedocs.io/en/latest/index.html
+djangorestframework_simplejwt
+
+# https://drf-yasg.readthedocs.io/en/stable/
+drf-yasg
+
+# https://pypi.org/project/django-cors-headers/
+django-cors-headers

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+npm install -D tailwindcss
+
+npx tailwindcss init
+
+# Define the file path
+file="tailwind.config.js"  # Change this to your actual file name
+
+# Use sed to replace the content in the file
+# sed -i 's#content: \[\]#content: ["./templates/**/*.html"]#' "$file"
+sed -i 's#content: \[\]#content: ["./templates/**/*.{html,js}"]#' "$file"
+
+# First time
+npx tailwindcss -i ./templates/tailwind/input.css -o ./static/css/tailwind.css

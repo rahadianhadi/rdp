@@ -1,0 +1,34 @@
+{% load static %}
+<c-vars bg_color="bg-white" />
+
+<!DOCTYPE html>
+<html lang="en"{% if class %} class="{{class}}"{% endif %}>
+
+  <head>
+    <title>{{ title }}</title>
+    
+    <!-- META -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+
+    {{ slot_header }}
+
+    <!-- Main Style  -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/app.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/tailwind.css' %}">
+
+    <!-- Main JS -->
+    <script src="{% static 'js/htmx/htmx.min.js' %}" defer></script>
+
+  </head>
+  <body{% if class %} class="{{class}}"{% endif %}>
+    
+    {{ slot }}
+
+    {{ slot_footer }}
+
+  </body>
+</html>

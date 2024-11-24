@@ -1,8 +1,14 @@
-import os
 import click
-import subprocess
 
-from rdp import django
+from rdp import __basedir__
+from rdp.system import command
+from rdp.system.directory import Directory
+
+from rdp.django.manage.project import DjangoProjectManager 
+from rdp.django.manage.app import DjangoAppManager
+
+BASE_DIR = Directory.get_cwd()
+BASE_RDP = __basedir__
 
 @click.group()
 def main():
@@ -18,21 +24,8 @@ def project(args):
   directory   Optional destination directory.\n
   """
   
-  if len(args) < 1:
-    raise click.UsageError("You must provide a project name")
-  
-  name = args[0]
-  if not name.isidentifier():
-     raise click.UsageError(f"Invalid name '{name}': Must be a valid Python identifier.")
-
-  command = ['django-admin', 'startproject', name]
-
-  # Validate DIRECTORY (second argument)
-  if len(args) > 1:  
-    command .append(args[1]) # Args 1 = Directory
-   
-  subprocess.run(command)
-
+  manager = DjangoProjectManager()
+  manager.run(args)
 
 @main.command()
 @click.argument('args', nargs=-1)
@@ -44,25 +37,41 @@ def app(args):
   directory   Optional destination directory.\n
   
   """
-  if len(args) < 1:
-    raise click.UsageError("You must provide an application name")
-  
-  name = args[0]
-  if not name.isidentifier():
-     raise click.UsageError(f"Invalid name '{name}': Must be a valid Python identifier.")
+  manager = DjangoAppManager()
+  manager.run(args)
 
-  # Check if current directory in root of Django project
-  pwd = os.getcwd()
-  if not django.utils.is_django_project_root(directory=pwd):
-    raise click.UsageError(f"Current directory '{pwd} not in Django root project!'")
-  
-  command = ['django-admin', 'startapp', name]
 
-  # Validate DIRECTORY (second argument)
-  if len(args) > 1:  
-    command .append(args[1]) # Args 1 = Directory
-   
-  subprocess.run(command)
-  
+@main.command()
+@click.argument('cmd')
+@click.argument('args', nargs=-1)
+def m(cmd, args):
+    """Dynamic command handler with alias support.
+    
+    r     runserver\n
+    m     migrate\n
+    cs    createsuperuser\n
+    mm    makemigrations\n
+    c     collectstatic
+    t     test\n
+    """
+    
+    COMMAND_MAPPING = {
+        'r': 'runserver',
+        'm': 'migrate',
+        'cs': 'createsuperuser',
+        'mm': 'makemigrations',
+        'c': 'collectstatic',
+        't': 'test',
+    }
+    
+    if cmd in COMMAND_MAPPING:
+      main_command = COMMAND_MAPPING.get(cmd, cmd)
+      cmd_list = ['python', 'manage.py', main_command]
+      cmd_list.extend(args)
+      command.run(cmd_list, is_debug=True)
+      
+    else:
+      raise click.UsageError(f"Unknown command or alias: {cmd}")
+    
 if __name__ == '__main__':
     main()
